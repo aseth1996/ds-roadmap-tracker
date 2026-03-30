@@ -639,10 +639,12 @@ async function doSignup(){
     return showAlert('signup-error', profileError.message, 'alert-error');
   }
 
-  showAlert('signup-error','Account created successfully. Please sign in.','alert-success');
-  showAuthTab('login');
-  document.getElementById('login-email').value=email;
-  document.getElementById('login-pwd').value='';
+  launchApp({
+  fname,
+  lname,
+  email,
+  role
+});
 }
 
 async function doLogin(){
