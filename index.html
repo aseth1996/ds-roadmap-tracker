@@ -25,7 +25,7 @@
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;font-size:14px;line-height:1.6;}
 
 /* ── AUTH OVERLAY ── */
-#auth-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;}
+#auth-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:none;align-items:center;justify-content:center;}
 .auth-wrap{width:100%;max-width:460px;padding:20px;}
 .auth-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px;}
 .auth-logo-mark{width:40px;height:40px;background:var(--text-primary);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;}
@@ -262,6 +262,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-prim
           </div>
         </div>
         <button class="btn-primary" onclick="doLogin()">Sign In</button>
+        <button class="btn-secondary" style="width:100%;margin-top:10px" onclick="googleLogin()">Continue with Google</button>
+        <div class="auth-footer" style="margin-top:10px"><a onclick="forgotWithPhone()">Forgot password using phone</a></div>
         <div class="auth-footer" style="margin-top:14px">
           Don't have an account? <a onclick="showAuthTab('signup')">Create one free</a>
         </div>
@@ -380,7 +382,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-prim
 </div>
 
 <!-- ════════════════════════════════ MAIN APP ════════════════════════════════ -->
-<div id="app">
+<div id="app" style="display:block;">
 <div class="topbar">
   <div class="topbar-left">
     <div class="logo-mark">DS</div>
@@ -389,7 +391,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-prim
       <div class="topbar-subtitle">Analyst → Data Scientist · Progress saved to your account</div>
     </div>
   </div>
-  <div class="topbar-right">
+  <div class="topbar-right"><button class="btn-sm" onclick="openAuthOverlay()">Login / Signup</button>
     <div class="topbar-stat">Days: <strong id="tb-days">0</strong> / 45</div>
     <div class="topbar-stat">Hours: <strong id="tb-hours">0.0</strong></div>
     <!-- User avatar & dropdown -->
@@ -607,6 +609,26 @@ function checkPwdStrength(pwd){
   document.getElementById('strength-label').textContent=labels[score]||'';
 }
 
+
+function openAuthOverlay(){document.getElementById('auth-overlay').style.display='flex';}
+function closeAuthOverlay(){document.getElementById('auth-overlay').style.display='none';}
+async function googleLogin(){
+  try{
+    await window.supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo: window.location.href}});
+  }catch(e){showAlert('login-error', e.message || 'Google login failed', 'alert-error');}
+}
+async function forgotWithPhone(){
+  const phone = prompt('Enter phone with country code, e.g. +9198xxxxxxx');
+  if(!phone) return;
+  try{
+    const { error } = await window.supabaseClient.auth.signInWithOtp({ phone });
+    if(error) throw error;
+    alert('OTP sent to your phone.');
+  }catch(e){
+    alert('Enable Phone provider in Supabase first. Error: ' + e.message);
+  }
+}
+
 async function doSignup(){
   const fname=document.getElementById('sig-fname').value.trim();
   const lname=document.getElementById('sig-lname').value.trim();
@@ -805,7 +827,7 @@ function doReset(){
 // ════════════════════════════════════════════════════
 // APP DATA
 // ════════════════════════════════════════════════════
-let CUR_USER=null;
+let CUR_USER={fname:'Guest',lname:'',email:'guest@local',role:'Visitor'};
 let S={days:{},projects:{}};
 
 const DAYS=[
