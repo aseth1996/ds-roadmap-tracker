@@ -630,7 +630,7 @@ async function doSignup(){
     return showAlert('signup-error', error.message, 'alert-error');
   }
 
-  const { error: profileError } = await supabase.from('users_profile').insert({
+  const { error: profileError } = await window.supabaseClient.from('users_profile').insert({
     id: data.user.id,
     full_name: `${fname} ${lname}`.trim(),
     role
@@ -665,7 +665,7 @@ async function doLogin(){
     return showAlert('login-error', error.message, 'alert-error');
   }
 
-  const { data: profile, error: profileError } = await supabase
+  const { data: profile, error: profileError } = await window.supabaseClient
     .from('users_profile')
     .select('*')
     .eq('id', data.user.id)
