@@ -525,10 +525,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-prim
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const supabaseClient = supabase.createClient(
+window.addEventListener("load", () => {
+  window.supabaseClient = supabase.createClient(
   "https://vsxwayqlopkhgzrcbjpt.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZzeHdheXFsb3BraGd6cmNianB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODUzMTYsImV4cCI6MjA5MDQ2MTMxNn0.3SMdcF5GDGdUw8p0qkAQ_jcpMAD89bmEIax44Mpk1M8"
-);
+  );
+});
 </script>
 
 <script>
@@ -619,7 +621,7 @@ async function doSignup(){
   if(pwd.length<6) return showAlert('signup-error','Password must be at least 6 characters.','alert-error');
   if(pwd!==pwd2) return showAlert('signup-error','Passwords do not match.','alert-error');
 
-  const { data, error } = await supabase.auth.signUp({
+  const { data, error } = await window.supabaseClient.auth.signUp({
     email,
     password: pwd
   });
@@ -654,7 +656,7 @@ async function doLogin(){
   if(!email) return showAlert('login-error','Please enter your email.','alert-error');
   if(!pwd) return showAlert('login-error','Please enter your password.','alert-error');
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { data, error } = window.supabaseClient.auth.signInWithPassword({
     email,
     password: pwd
   });
