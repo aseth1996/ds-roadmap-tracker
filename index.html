@@ -523,10 +523,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-prim
 </div>
 </div><!-- end #app -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const supabaseClient = window.supabase.createClient(
+const supabaseClient = supabase.createClient(
   "https://vsxwayqlopkhgzrcbjpt.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZzeHdheXFsb3BraGd6cmNianB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODUzMTYsImV4cCI6MjA5MDQ2MTMxNn0.3SMdcF5GDGdUw8p0qkAQ_jcpMAD89bmEIax44Mpk1M8"
 );
