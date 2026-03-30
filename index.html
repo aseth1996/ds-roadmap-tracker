@@ -25,7 +25,7 @@
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;font-size:14px;line-height:1.6;}
 
 /* ── AUTH OVERLAY ── */
-#auth-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:none;align-items:center;justify-content:center;}
+#auth-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;}
 .auth-wrap{width:100%;max-width:460px;padding:20px;}
 .auth-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px;}
 .auth-logo-mark{width:40px;height:40px;background:var(--text-primary);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;}
@@ -262,8 +262,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-prim
           </div>
         </div>
         <button class="btn-primary" onclick="doLogin()">Sign In</button>
-        <button class="btn-secondary" style="width:100%;margin-top:10px" onclick="googleLogin()">Continue with Google</button>
-        <div class="auth-footer" style="margin-top:10px"><a onclick="forgotWithPhone()">Forgot password using phone</a></div>
         <div class="auth-footer" style="margin-top:14px">
           Don't have an account? <a onclick="showAuthTab('signup')">Create one free</a>
         </div>
@@ -382,7 +380,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-prim
 </div>
 
 <!-- ════════════════════════════════ MAIN APP ════════════════════════════════ -->
-<div id="app" style="display:block;">
+<div id="app">
 <div class="topbar">
   <div class="topbar-left">
     <div class="logo-mark">DS</div>
@@ -391,7 +389,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-prim
       <div class="topbar-subtitle">Analyst → Data Scientist · Progress saved to your account</div>
     </div>
   </div>
-  <div class="topbar-right"><button class="btn-sm" onclick="openAuthOverlay()">Login / Signup</button>
+  <div class="topbar-right">
     <div class="topbar-stat">Days: <strong id="tb-days">0</strong> / 45</div>
     <div class="topbar-stat">Hours: <strong id="tb-hours">0.0</strong></div>
     <!-- User avatar & dropdown -->
@@ -525,16 +523,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-prim
 </div>
 </div><!-- end #app -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-window.addEventListener("load", () => {
-  window.supabaseClient = supabase.createClient(
-  "https://vsxwayqlopkhgzrcbjpt.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZzeHdheXFsb3BraGd6cmNianB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODUzMTYsImV4cCI6MjA5MDQ2MTMxNn0.3SMdcF5GDGdUw8p0qkAQ_jcpMAD89bmEIax44Mpk1M8"
-  );
-});
-</script>
-
 <script>
 // ════════════════════════════════════════════════════
 // AUTH SYSTEM
@@ -609,27 +597,7 @@ function checkPwdStrength(pwd){
   document.getElementById('strength-label').textContent=labels[score]||'';
 }
 
-
-function openAuthOverlay(){document.getElementById('auth-overlay').style.display='flex';}
-function closeAuthOverlay(){document.getElementById('auth-overlay').style.display='none';}
-async function googleLogin(){
-  try{
-    await window.supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo: window.location.href}});
-  }catch(e){showAlert('login-error', e.message || 'Google login failed', 'alert-error');}
-}
-async function forgotWithPhone(){
-  const phone = prompt('Enter phone with country code, e.g. +9198xxxxxxx');
-  if(!phone) return;
-  try{
-    const { error } = await window.supabaseClient.auth.signInWithOtp({ phone });
-    if(error) throw error;
-    alert('OTP sent to your phone.');
-  }catch(e){
-    alert('Enable Phone provider in Supabase first. Error: ' + e.message);
-  }
-}
-
-async function doSignup(){
+function doSignup(){
   const fname=document.getElementById('sig-fname').value.trim();
   const lname=document.getElementById('sig-lname').value.trim();
   const email=document.getElementById('sig-email').value.trim().toLowerCase();
@@ -637,75 +605,28 @@ async function doSignup(){
   const pwd=document.getElementById('sig-pwd').value;
   const pwd2=document.getElementById('sig-pwd2').value;
   hideAlert('signup-error');
-
-  if(!fname) return showAlert('signup-error','Please enter your first name.','alert-error');
-  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showAlert('signup-error','Please enter a valid email address.','alert-error');
-  if(pwd.length<6) return showAlert('signup-error','Password must be at least 6 characters.','alert-error');
-  if(pwd!==pwd2) return showAlert('signup-error','Passwords do not match.','alert-error');
-
-  const { data, error } = await window.supabaseClient.auth.signUp({
-    email,
-    password: pwd
-  });
-
-  if(error){
-    return showAlert('signup-error', error.message, 'alert-error');
-  }
-
-  const { error: profileError } = await window.supabaseClient.from('users_profile').insert({
-    id: data.user.id,
-    full_name: `${fname} ${lname}`.trim(),
-    role
-  });
-
-  if(profileError){
-    return showAlert('signup-error', profileError.message, 'alert-error');
-  }
-
-  launchApp({
-  fname,
-  lname,
-  email,
-  role
-});
+  if(!fname){return showAlert('signup-error','Please enter your first name.','alert-error');}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){return showAlert('signup-error','Please enter a valid email address.','alert-error');}
+  if(pwd.length<6){return showAlert('signup-error','Password must be at least 6 characters.','alert-error');}
+  if(pwd!==pwd2){return showAlert('signup-error','Passwords do not match.','alert-error');}
+  const users=getUsers();
+  if(users[email]){return showAlert('signup-error','An account with this email already exists.','alert-error');}
+  users[email]={fname,lname,email,role,pwd:hashPwd(pwd),createdAt:new Date().toISOString()};
+  saveUsers(users);
+  setSession(email);
+  launchApp(users[email]);
 }
 
-async function doLogin(){
+function doLogin(){
   const email=document.getElementById('login-email').value.trim().toLowerCase();
   const pwd=document.getElementById('login-pwd').value;
-
   hideAlert('login-error');
-
-  if(!email) return showAlert('login-error','Please enter your email.','alert-error');
-  if(!pwd) return showAlert('login-error','Please enter your password.','alert-error');
-
-  const { data, error } = await window.supabaseClient.auth.signInWithPassword({
-    email,
-    password: pwd
-  });
-
-  if(error || !data || !data.user){
-    return showAlert('login-error', error?.message || 'Login failed', 'alert-error');
-  }
-
-  const { data: profile, error: profileError } = await window.supabaseClient
-    .from('users_profile')
-    .select('*')
-    .eq('id', data.user.id)
-    .single();
-
-  if(profileError){
-    return showAlert('login-error', profileError.message, 'alert-error');
-  }
-
-  const fullName=(profile?.full_name || 'User').trim().split(' ');
-  const user={
-    fname: fullName[0] || 'User',
-    lname: fullName.slice(1).join(' '),
-    email: data.user.email,
-    role: profile?.role || 'Data Analyst'
-  };
-
+  if(!email){return showAlert('login-error','Please enter your email.','alert-error');}
+  if(!pwd){return showAlert('login-error','Please enter your password.','alert-error');}
+  const users=getUsers();
+  const user=users[email];
+  if(!user||user.pwd!==hashPwd(pwd)){return showAlert('login-error','Incorrect email or password.','alert-error');}
+  setSession(email);
   launchApp(user);
 }
 
@@ -827,7 +748,7 @@ function doReset(){
 // ════════════════════════════════════════════════════
 // APP DATA
 // ════════════════════════════════════════════════════
-let CUR_USER={fname:'Guest',lname:'',email:'guest@local',role:'Visitor'};
+let CUR_USER=null;
 let S={days:{},projects:{}};
 
 const DAYS=[
