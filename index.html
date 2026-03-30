@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS Roadmap Tracker — 45-Day Journey</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F7F6F2;--surface:#FFFFFF;--surface2:#F0EEE8;--border:#E2DED6;--border2:#D0CBC0;
+  --text-primary:#1C1A17;--text-secondary:#6B6459;--text-muted:#A39D95;
+  --accent-blue:#2B5DA8;--accent-blue-light:#EBF0FA;
+  --accent-teal:#1A7A60;--accent-teal-light:#E8F5F1;
+  --accent-amber:#B5600A;--accent-amber-light:#FDF3E8;
+  --phase1:#4A3FA0;--phase1-bg:#EDEAF9;--phase2:#1A7A60;--phase2-bg:#E6F5F0;
+  --phase3:#B5600A;--phase3-bg:#FDF3E8;--phase4:#2B5DA8;--phase4-bg:#EBF0FA;
+  --green:#2D7D4F;--green-bg:#E8F5EE;--amber-status:#9A6000;--amber-status-bg:#FEF6E4;
+  --red:#C0392B;--red-bg:#FDECEA;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:0 8px 28px rgba(0,0,0,0.12);
+  --radius:10px;--radius-lg:16px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;font-size:14px;line-height:1.6;}
+
+/* ── AUTH OVERLAY ── */
+#auth-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;}
+.auth-wrap{width:100%;max-width:460px;padding:20px;}
+.auth-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px;}
+.auth-logo-mark{width:40px;height:40px;background:var(--text-primary);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;}
+.auth-logo-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow-lg);}
+.auth-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;margin-bottom:4px;}
+.auth-subtitle{font-size:13px;color:var(--text-secondary);margin-bottom:24px;}
+.auth-tabs{display:flex;gap:2px;background:var(--surface2);border-radius:8px;padding:3px;margin-bottom:24px;}
+.auth-tab{flex:1;padding:7px;text-align:center;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text-muted);transition:all .15s;}
+.auth-tab.active{background:var(--surface);color:var(--text-primary);box-shadow:var(--shadow-sm);}
+.form-group{margin-bottom:16px;}
+.form-label{font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:5px;display:block;letter-spacing:.02em;}
+.form-input{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text-primary);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;}
+.form-input:focus{border-color:var(--accent-blue);box-shadow:0 0 0 3px rgba(43,93,168,0.08);}
+.form-input.error{border-color:var(--red);}
+.form-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+.form-error{font-size:12px;color:var(--red);margin-top:4px;display:none;}
+.form-error.show{display:block;}
+.btn-primary{width:100%;padding:11px;background:var(--text-primary);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s,transform .1s;margin-top:4px;}
+.btn-primary:hover{opacity:.88;}
+.btn-primary:active{transform:scale(.99);}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:18px 0;color:var(--text-muted);font-size:12px;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.auth-footer{text-align:center;font-size:12px;color:var(--text-muted);margin-top:18px;}
+.auth-footer a{color:var(--accent-blue);text-decoration:none;font-weight:500;cursor:pointer;}
+.auth-footer a:hover{text-decoration:underline;}
+.alert-msg{padding:10px 12px;border-radius:8px;font-size:12px;margin-bottom:14px;display:none;}
+.alert-msg.show{display:block;}
+.alert-error{background:var(--red-bg);color:var(--red);border:1px solid #EFB8B4;}
+.alert-success{background:var(--green-bg);color:var(--green);border:1px solid #B8DFCA;}
+.pwd-wrap{position:relative;}
+.pwd-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:0;line-height:1;}
+.strength-bar{height:3px;border-radius:2px;margin-top:5px;background:var(--border);overflow:hidden;}
+.strength-fill{height:100%;border-radius:2px;transition:width .3s,background .3s;}
+.avatar-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex-shrink:0;cursor:pointer;transition:opacity .15s;}
+.avatar-circle:hover{opacity:.85;}
+.user-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);min-width:220px;z-index:200;overflow:hidden;}
+.user-menu-header{padding:14px 16px;border-bottom:1px solid var(--border);}
+.user-menu-name{font-size:13px;font-weight:600;}
+.user-menu-email{font-size:11px;color:var(--text-muted);margin-top:1px;}
+.user-menu-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13px;color:var(--text-secondary);cursor:pointer;transition:background .1s;}
+.user-menu-item:hover{background:var(--surface2);color:var(--text-primary);}
+.user-menu-item.danger{color:var(--red);}
+.user-menu-item.danger:hover{background:var(--red-bg);}
+.user-menu-divider{height:1px;background:var(--border);}
+
+/* ── PROFILE MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:5000;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:100%;max-width:440px;overflow:hidden;animation:fadeInUp .2s ease;}
+.modal-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);line-height:1;padding:0;}
+.modal-close:hover{color:var(--text-primary);}
+.modal-body{padding:20px 24px;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
+.btn-secondary{padding:9px 18px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .15s;}
+.btn-secondary:hover{background:var(--surface2);color:var(--text-primary);}
+.btn-danger{padding:9px 18px;background:var(--red-bg);border:1px solid #EFB8B4;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--red);cursor:pointer;transition:all .15s;}
+.btn-danger:hover{background:#FCCACA;}
+.big-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;margin:0 auto 16px;}
+
+/* ── MAIN APP ── */
+#app{display:none;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.logo-mark{width:32px;height:32px;background:var(--text-primary);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#fff;}
+.topbar-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;}
+.topbar-subtitle{font-size:11px;color:var(--text-muted);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:10px;position:relative;}
+.topbar-stat{display:flex;align-items:center;gap:6px;padding:5px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text-secondary);}
+.topbar-stat strong{color:var(--text-primary);}
+.btn-sm{padding:6px 14px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .15s;}
+.btn-sm:hover{background:var(--surface2);color:var(--text-primary);}
+.layout{display:flex;min-height:calc(100vh - 58px);}
+.sidebar{width:252px;min-width:252px;background:var(--surface);border-right:1px solid var(--border);padding:20px 0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;}
+.sidebar-section{padding:0 14px;margin-bottom:24px;}
+.sidebar-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;transition:all .15s;margin-bottom:2px;font-size:13px;color:var(--text-secondary);}
+.nav-item:hover{background:var(--surface2);color:var(--text-primary);}
+.nav-item.active{background:var(--text-primary);color:#fff;font-weight:500;}
+.nav-icon{font-size:14px;width:18px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--surface2);color:var(--text-muted);font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;font-family:'DM Mono',monospace;}
+.nav-item.active .nav-badge{background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);}
+.phase-nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--radius);cursor:pointer;margin-bottom:2px;font-size:12px;transition:all .15s;color:var(--text-secondary);}
+.phase-nav-item:hover{background:var(--surface2);}
+.phase-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sidebar-divider{height:1px;background:var(--border);margin:4px 14px 18px;}
+.sidebar-progress{padding:14px;background:var(--surface2);border-radius:var(--radius-lg);margin:0 14px 18px;}
+.sidebar-progress-label{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.sidebar-progress-pct{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--text-primary);line-height:1;}
+.sidebar-progress-sub{font-size:11px;color:var(--text-muted);margin-top:3px;margin-bottom:10px;}
+.prog-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;background:var(--text-primary);transition:width .5s ease;}
+.main{flex:1;padding:28px 32px;overflow-y:auto;min-width:0;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadeInUp .2s ease;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.page-header{margin-bottom:24px;}
+.page-header h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:600;margin-bottom:3px;}
+.page-header p{font-size:13px;color:var(--text-secondary);}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow-sm);transition:box-shadow .2s;}
+.kpi-card:hover{box-shadow:var(--shadow-md);}
+.kpi-icon{font-size:18px;margin-bottom:8px;}
+.kpi-value{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;line-height:1;}
+.kpi-label{font-size:11px;color:var(--text-muted);margin-top:3px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;}
+.kpi-sub{font-size:12px;color:var(--text-secondary);margin-top:5px;}
+.phase-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px;}
+.phase-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow-sm);cursor:pointer;transition:box-shadow .2s,transform .15s;}
+.phase-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.phase-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+.phase-card-title{font-size:13px;font-weight:600;}
+.phase-card-days{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.phase-pct{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;}
+.phase-bar-track{height:7px;background:var(--surface2);border-radius:4px;overflow:hidden;margin-bottom:8px;}
+.phase-bar-fill{height:100%;border-radius:4px;transition:width .5s ease;}
+.phase-stats{display:flex;gap:14px;}
+.phase-stat{font-size:11px;color:var(--text-muted);}
+.phase-stat strong{color:var(--text-primary);font-weight:600;}
+.section-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.section-heading h2{font-size:14px;font-weight:600;}
+.section-meta{font-size:12px;color:var(--text-muted);}
+.tracker-filters{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.filter-btn{padding:5px 12px;border:1px solid var(--border);border-radius:20px;background:var(--surface);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .15s;}
+.filter-btn:hover{border-color:var(--border2);color:var(--text-primary);}
+.filter-btn.active{background:var(--text-primary);border-color:var(--text-primary);color:#fff;}
+.search-box{margin-left:auto;display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;}
+.search-box input{border:none;outline:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text-primary);width:150px;}
+.search-box input::placeholder{color:var(--text-muted);}
+.tracker-table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);}
+.tracker-table{width:100%;border-collapse:collapse;}
+.tracker-table thead th{background:var(--surface2);padding:10px 14px;text-align:left;font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);white-space:nowrap;}
+.tracker-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
+.tracker-table tbody tr:last-child{border-bottom:none;}
+.tracker-table tbody tr:hover{background:#FAFAF8;}
+.tracker-table tbody tr.row-completed{background:#FAFDFB;}
+.tracker-table td{padding:10px 14px;vertical-align:middle;}
+.day-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;flex-shrink:0;}
+.topic-title{font-size:13px;font-weight:500;}
+.resource-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--accent-blue);background:var(--accent-blue-light);padding:3px 7px;border-radius:4px;text-decoration:none;font-weight:500;white-space:nowrap;}
+.project-flag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--accent-teal);background:var(--accent-teal-light);padding:2px 7px;border-radius:4px;margin-top:3px;}
+.capstone-flag{color:var(--accent-amber);background:var(--accent-amber-light);}
+.status-sel{padding:5px 28px 5px 9px;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--text-secondary);background:var(--surface);cursor:pointer;outline:none;min-width:128px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23A39D95'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color .15s;}
+.status-sel.s-completed{background-color:var(--green-bg);color:var(--green);border-color:#B8DFCA;}
+.status-sel.s-in-progress{background-color:var(--amber-status-bg);color:var(--amber-status);border-color:#F0D899;}
+.status-sel.s-skipped{background-color:var(--surface2);color:var(--text-muted);}
+.time-input{width:56px;padding:5px 7px;border:1px solid var(--border);border-radius:6px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text-primary);background:var(--surface);outline:none;text-align:center;transition:border-color .15s;}
+.time-input:focus{border-color:var(--text-primary);}
+.notes-input{width:100%;min-width:120px;padding:5px 7px;border:1px solid transparent;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text-primary);background:transparent;outline:none;resize:none;transition:all .15s;}
+.notes-input:focus{border-color:var(--border);background:var(--surface);}
+.notes-input::placeholder{color:var(--text-muted);}
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.project-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);transition:box-shadow .2s,transform .15s;position:relative;overflow:hidden;}
+.project-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.project-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);margin-bottom:6px;}
+.project-title{font-size:13px;font-weight:600;margin-bottom:5px;line-height:1.4;}
+.project-dataset{font-size:11px;color:var(--text-secondary);margin-bottom:8px;}
+.project-skills{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;}
+.skill-tag{padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;background:var(--surface2);color:var(--text-secondary);border:1px solid var(--border);}
+.project-status-sel{padding:5px 24px 5px 9px;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--text-secondary);background:var(--surface);cursor:pointer;outline:none;width:100%;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23A39D95'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;}
+.project-status-sel.s-completed{background-color:var(--green-bg);color:var(--green);border-color:#B8DFCA;}
+.project-status-sel.s-deployed{background-color:var(--accent-blue-light);color:var(--accent-blue);border-color:#BAD0EF;}
+.project-status-sel.s-in-progress{background-color:var(--amber-status-bg);color:var(--amber-status);border-color:#F0D899;}
+.capstone-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:var(--accent-amber);background:var(--accent-amber-light);padding:2px 7px;border-radius:4px;border:1px solid #EFCDA0;margin-bottom:10px;}
+.url-input{width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:11px;font-family:'DM Sans',sans-serif;color:var(--text-primary);background:var(--surface);outline:none;margin-bottom:4px;transition:border-color .15s;}
+.url-input:focus{border-color:var(--text-primary);}
+.resources-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.resource-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);transition:box-shadow .15s;}
+.resource-card:hover{box-shadow:var(--shadow-md);}
+.resource-card-icon{font-size:20px;margin-bottom:8px;}
+.resource-card-name{font-size:13px;font-weight:600;margin-bottom:4px;}
+.resource-card-desc{font-size:12px;color:var(--text-secondary);margin-bottom:8px;line-height:1.5;}
+.resource-card-url{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--accent-blue);font-weight:500;text-decoration:none;}
+.resource-card-url:hover{text-decoration:underline;}
+.dataset-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.dataset-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:flex-start;gap:10px;}
+.dataset-icon{font-size:17px;flex-shrink:0;margin-top:1px;}
+.dataset-name{font-size:13px;font-weight:500;}
+.dataset-meta{font-size:11px;color:var(--text-muted);margin-top:1px;}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm);}
+.stat-card h3{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em;}
+.week-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.week-label{font-size:12px;font-weight:500;width:72px;flex-shrink:0;}
+.week-bar-track{flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden;}
+.week-bar-fill{height:100%;border-radius:4px;transition:width .5s;}
+.week-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);width:42px;text-align:right;}
+.donut-wrap{display:flex;align-items:center;gap:20px;}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:12px;margin-bottom:8px;}
+.legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.legend-label{color:var(--text-secondary);}
+.legend-count{margin-left:auto;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;}
+.hours-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.hours-label{font-size:12px;color:var(--text-secondary);width:72px;flex-shrink:0;font-weight:500;}
+.hours-bar-track{flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden;}
+.hours-bar-fill{height:100%;border-radius:4px;transition:width .5s;}
+.hours-val{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);width:36px;text-align:right;}
+.celebrate-banner{display:none;background:linear-gradient(135deg,#F0FDF4,#EBF5FF);border:1px solid #B8DFCA;border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:18px;align-items:center;gap:12px;}
+.celebrate-banner.show{display:flex;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════ AUTH OVERLAY ════════════════════════════════ -->
+<div id="auth-overlay">
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <div class="auth-logo-mark">DS</div>
+      <div class="auth-logo-text">45-Day DS Tracker</div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tab-login-btn" onclick="showAuthTab('login')">Sign In</div>
+        <div class="auth-tab" id="tab-signup-btn" onclick="showAuthTab('signup')">Create Account</div>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="login-form">
+        <div class="alert-msg alert-error" id="login-error"></div>
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input class="form-input" type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="pwd-wrap">
+            <input class="form-input" type="password" id="login-pwd" placeholder="Enter your password" autocomplete="current-password">
+            <button class="pwd-toggle" onclick="togglePwd('login-pwd',this)" type="button">👁</button>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="doLogin()">Sign In</button>
+        <div class="auth-footer" style="margin-top:14px">
+          Don't have an account? <a onclick="showAuthTab('signup')">Create one free</a>
+        </div>
+      </div>
+
+      <!-- SIGNUP FORM -->
+      <div id="signup-form" style="display:none">
+        <div class="alert-msg alert-error" id="signup-error"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">First name</label>
+            <input class="form-input" type="text" id="sig-fname" placeholder="Priya" autocomplete="given-name">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Last name</label>
+            <input class="form-input" type="text" id="sig-lname" placeholder="Sharma" autocomplete="family-name">
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:14px">
+          <label class="form-label">Email address</label>
+          <input class="form-input" type="email" id="sig-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role / Current title</label>
+          <input class="form-input" type="text" id="sig-role" placeholder="Data Analyst, Senior Analyst…">
+          <div class="form-hint">Helps personalise your dashboard</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="pwd-wrap">
+            <input class="form-input" type="password" id="sig-pwd" placeholder="Create a strong password" oninput="checkPwdStrength(this.value)" autocomplete="new-password">
+            <button class="pwd-toggle" onclick="togglePwd('sig-pwd',this)" type="button">👁</button>
+          </div>
+          <div class="strength-bar"><div class="strength-fill" id="strength-fill" style="width:0%"></div></div>
+          <div class="form-hint" id="strength-label">Password strength</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm password</label>
+          <input class="form-input" type="password" id="sig-pwd2" placeholder="Repeat password" autocomplete="new-password">
+        </div>
+        <button class="btn-primary" onclick="doSignup()">Create Account</button>
+        <div class="auth-footer" style="margin-top:14px">
+          Already have an account? <a onclick="showAuthTab('login')">Sign in</a>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--text-muted)">All data stored securely in your browser · No server required</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ PROFILE MODAL ════════════════════════════════ -->
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">My Profile</div>
+      <button class="modal-close" onclick="closeModal('profile-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="prof-avatar-big" class="big-avatar"></div>
+      <div class="alert-msg alert-success" id="prof-success"></div>
+      <div class="alert-msg alert-error" id="prof-error"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">First name</label>
+          <input class="form-input" type="text" id="prof-fname">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Last name</label>
+          <input class="form-input" type="text" id="prof-lname">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:14px">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="prof-email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Role / Title</label>
+        <input class="form-input" type="text" id="prof-role">
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px">
+        <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Change Password (optional)</div>
+        <div class="form-group">
+          <label class="form-label">Current password</label>
+          <input class="form-input" type="password" id="prof-cur-pwd" placeholder="Enter current password">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">New password</label>
+          <input class="form-input" type="password" id="prof-new-pwd" placeholder="Leave blank to keep current">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('profile-modal')">Cancel</button>
+      <button class="btn-primary" style="width:auto;padding:9px 22px;margin-top:0" onclick="saveProfile()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESET DATA MODAL -->
+<div class="modal-overlay" id="reset-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">Reset Progress</div>
+      <button class="modal-close" onclick="closeModal('reset-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px">This will permanently delete all your learning progress, hours logged, notes, and project statuses. Your account will remain.</p>
+      <p style="font-size:13px;font-weight:500">Type <strong>RESET</strong> to confirm:</p>
+      <input class="form-input" type="text" id="reset-confirm" placeholder="RESET" style="margin-top:10px">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('reset-modal')">Cancel</button>
+      <button class="btn-danger" onclick="doReset()">Reset All Progress</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ MAIN APP ════════════════════════════════ -->
+<div id="app">
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo-mark">DS</div>
+    <div>
+      <div class="topbar-title">45-Day Data Science Tracker</div>
+      <div class="topbar-subtitle">Analyst → Data Scientist · Progress saved to your account</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-stat">Days: <strong id="tb-days">0</strong> / 45</div>
+    <div class="topbar-stat">Hours: <strong id="tb-hours">0.0</strong></div>
+    <!-- User avatar & dropdown -->
+    <div style="position:relative" id="user-menu-wrap">
+      <div class="avatar-circle" id="topbar-avatar" onclick="toggleUserMenu()" title="Account"></div>
+      <div class="user-menu" id="user-menu" style="display:none">
+        <div class="user-menu-header">
+          <div class="user-menu-name" id="menu-name">—</div>
+          <div class="user-menu-email" id="menu-email">—</div>
+        </div>
+        <div class="user-menu-item" onclick="openProfile()">✎ Edit Profile</div>
+        <div class="user-menu-item" onclick="openModal('reset-modal');toggleUserMenu()">↺ Reset Progress</div>
+        <div class="user-menu-divider"></div>
+        <div class="user-menu-item danger" onclick="doLogout()">⎋ Sign Out</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-progress">
+        <div class="sidebar-progress-label">Overall Progress</div>
+        <div class="sidebar-progress-pct" id="sb-pct">0%</div>
+        <div class="sidebar-progress-sub" id="sb-sub">0 of 45 days complete</div>
+        <div class="prog-track"><div class="prog-fill" id="sb-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigation</div>
+      <div class="nav-item active" onclick="switchTab('dashboard',this)"><span class="nav-icon">◈</span> Dashboard</div>
+      <div class="nav-item" onclick="switchTab('tracker',this)"><span class="nav-icon">☑</span> Daily Tracker <span class="nav-badge" id="nav-rem">45</span></div>
+      <div class="nav-item" onclick="switchTab('projects',this)"><span class="nav-icon">◎</span> Projects <span class="nav-badge" id="nav-proj">0/12</span></div>
+      <div class="nav-item" onclick="switchTab('resources',this)"><span class="nav-icon">◉</span> Resources</div>
+      <div class="nav-item" onclick="switchTab('stats',this)"><span class="nav-icon">◐</span> Statistics</div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Phases</div>
+      <div class="phase-nav-item" onclick="gotoPhase('P1')"><div class="phase-dot" style="background:#4A3FA0"></div><span>Phase 1 · Python & EDA</span><span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted)" id="ph1-sb">0/12</span></div>
+      <div class="phase-nav-item" onclick="gotoPhase('P2')"><div class="phase-dot" style="background:#1A7A60"></div><span>Phase 2 · ML Core</span><span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted)" id="ph2-sb">0/12</span></div>
+      <div class="phase-nav-item" onclick="gotoPhase('P3')"><div class="phase-dot" style="background:#B5600A"></div><span>Phase 3 · Advanced ML</span><span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted)" id="ph3-sb">0/12</span></div>
+      <div class="phase-nav-item" onclick="gotoPhase('P4')"><div class="phase-dot" style="background:#2B5DA8"></div><span>Phase 4 · Portfolio</span><span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted)" id="ph4-sb">0/9</span></div>
+    </div>
+    <!-- Signed-in user footer in sidebar -->
+    <div style="padding:0 14px;margin-top:auto">
+      <div style="display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--surface2);border-radius:var(--radius);cursor:pointer" onclick="openProfile()">
+        <div class="avatar-circle" id="sidebar-avatar" style="width:28px;height:28px;font-size:11px"></div>
+        <div style="min-width:0">
+          <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebar-name">—</div>
+          <div style="font-size:10px;color:var(--text-muted)" id="sidebar-role">—</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <div class="tab-panel active" id="tab-dashboard">
+      <div class="page-header">
+        <h1 id="dash-greeting">Learning Dashboard</h1>
+        <p>Your progress from Data Analyst to Data Scientist across 45 focused days.</p>
+      </div>
+      <div class="celebrate-banner" id="celebrate"><span style="font-size:22px">🎉</span><div><div style="font-size:14px;font-weight:600;color:var(--green)">Roadmap Complete — You're a Data Scientist!</div><div style="font-size:12px;color:var(--text-secondary);margin-top:2px">All 45 days done. Your portfolio is ready.</div></div></div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-icon">✓</div><div class="kpi-value" id="kpi-d">0</div><div class="kpi-label">Days Completed</div><div class="kpi-sub">of 45 total</div></div>
+        <div class="kpi-card"><div class="kpi-icon">◎</div><div class="kpi-value" id="kpi-p">0%</div><div class="kpi-label">Roadmap Complete</div><div class="kpi-sub" id="kpi-psub">45 remaining</div></div>
+        <div class="kpi-card"><div class="kpi-icon">⊞</div><div class="kpi-value" id="kpi-prj">0</div><div class="kpi-label">Projects Built</div><div class="kpi-sub">of 12 total</div></div>
+        <div class="kpi-card"><div class="kpi-icon">◷</div><div class="kpi-value" id="kpi-h">0</div><div class="kpi-label">Hours Invested</div><div class="kpi-sub" id="kpi-hsub">~0 hrs/day</div></div>
+      </div>
+      <div class="section-heading"><h2>Phase Progress</h2><span class="section-meta">Click to navigate</span></div>
+      <div class="phase-grid">
+        <div class="phase-card" onclick="gotoPhase('P1')"><div class="phase-card-header"><div><div class="phase-card-title">⚡ Phase 1 · Python & EDA</div><div class="phase-card-days">Days 1–12 · 12 days · 2 projects</div></div><div class="phase-pct" style="color:var(--phase1)" id="p1-pct">0%</div></div><div class="phase-bar-track"><div class="phase-bar-fill" id="p1-bar" style="width:0%;background:var(--phase1)"></div></div><div class="phase-stats"><div class="phase-stat"><strong id="p1-d">0</strong> done</div><div class="phase-stat"><strong id="p1-r">12</strong> left</div></div></div>
+        <div class="phase-card" onclick="gotoPhase('P2')"><div class="phase-card-header"><div><div class="phase-card-title">🤖 Phase 2 · ML Core</div><div class="phase-card-days">Days 13–24 · 12 days · 4 projects</div></div><div class="phase-pct" style="color:var(--phase2)" id="p2-pct">0%</div></div><div class="phase-bar-track"><div class="phase-bar-fill" id="p2-bar" style="width:0%;background:var(--phase2)"></div></div><div class="phase-stats"><div class="phase-stat"><strong id="p2-d">0</strong> done</div><div class="phase-stat"><strong id="p2-r">12</strong> left</div></div></div>
+        <div class="phase-card" onclick="gotoPhase('P3')"><div class="phase-card-header"><div><div class="phase-card-title">🔬 Phase 3 · Advanced ML & NLP</div><div class="phase-card-days">Days 25–36 · 12 days · 4 projects</div></div><div class="phase-pct" style="color:var(--phase3)" id="p3-pct">0%</div></div><div class="phase-bar-track"><div class="phase-bar-fill" id="p3-bar" style="width:0%;background:var(--phase3)"></div></div><div class="phase-stats"><div class="phase-stat"><strong id="p3-d">0</strong> done</div><div class="phase-stat"><strong id="p3-r">12</strong> left</div></div></div>
+        <div class="phase-card" onclick="gotoPhase('P4')"><div class="phase-card-header"><div><div class="phase-card-title">🚀 Phase 4 · Portfolio & Career</div><div class="phase-card-days">Days 37–45 · 9 days · 2 capstones</div></div><div class="phase-pct" style="color:var(--phase4)" id="p4-pct">0%</div></div><div class="phase-bar-track"><div class="phase-bar-fill" id="p4-bar" style="width:0%;background:var(--phase4)"></div></div><div class="phase-stats"><div class="phase-stat"><strong id="p4-d">0</strong> done</div><div class="phase-stat"><strong id="p4-r">9</strong> left</div></div></div>
+      </div>
+      <div class="section-heading"><h2>Recent Completions</h2></div>
+      <div id="recent-box" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)"><div style="padding:36px;text-align:center;color:var(--text-muted);font-size:13px">No activity yet. Head to <strong>Daily Tracker</strong> to get started.</div></div>
+    </div>
+
+    <!-- TRACKER -->
+    <div class="tab-panel" id="tab-tracker">
+      <div class="page-header"><h1>Daily Tracker</h1><p>Mark each day, log your hours, and add notes as you work through the roadmap.</p></div>
+      <div class="tracker-filters">
+        <button class="filter-btn active" onclick="filterBy('all',this)">All</button>
+        <button class="filter-btn" onclick="filterBy('P1',this)">Phase 1</button>
+        <button class="filter-btn" onclick="filterBy('P2',this)">Phase 2</button>
+        <button class="filter-btn" onclick="filterBy('P3',this)">Phase 3</button>
+        <button class="filter-btn" onclick="filterBy('P4',this)">Phase 4</button>
+        <button class="filter-btn" onclick="filterBy('project',this)">Projects Only</button>
+        <button class="filter-btn" onclick="filterBy('completed',this)">Completed</button>
+        <button class="filter-btn" onclick="filterBy('pending',this)">Pending</button>
+        <div class="search-box"><span style="color:var(--text-muted);font-size:13px">⌕</span><input type="text" id="srch" placeholder="Search topics…" oninput="doSearch(this.value)"></div>
+      </div>
+      <div class="tracker-table-wrap"><table class="tracker-table"><thead><tr><th style="width:46px">Day</th><th>Topic</th><th style="width:170px">Free Resource</th><th style="width:150px">Key Concepts</th><th style="width:150px">Task</th><th style="width:140px">Status</th><th style="width:64px">Hrs</th><th>Notes</th></tr></thead><tbody id="tbody"></tbody></table></div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="tab-panel" id="tab-projects">
+      <div class="page-header"><h1>Project Portfolio</h1><p>12 real-world projects on free datasets — your data science portfolio.</p></div>
+      <div style="display:flex;gap:12px;margin-bottom:20px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-sm)"><span style="font-size:18px">◎</span><div><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700" id="pj-done">0</div><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Completed</div></div></div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-sm)"><span style="font-size:18px">⬡</span><div><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700" id="pj-dep">0</div><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Deployed</div></div></div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-sm)"><span style="font-size:18px">◐</span><div><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">12</div><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Total</div></div></div>
+      </div>
+      <div class="projects-grid" id="proj-grid"></div>
+    </div>
+
+    <!-- RESOURCES -->
+    <div class="tab-panel" id="tab-resources">
+      <div class="page-header"><h1>Free Learning Resources</h1><p>Every resource in this roadmap is free and video-based.</p></div>
+      <div class="section-heading"><h2>YouTube Channels</h2><span class="section-meta">Subscribe to all 8</span></div>
+      <div class="resources-grid" id="ch-grid"></div>
+      <div class="section-heading" style="margin-top:8px"><h2>Datasets & Platforms</h2><span class="section-meta">All free</span></div>
+      <div class="dataset-grid" id="ds-grid"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="tab-panel" id="tab-stats">
+      <div class="page-header"><h1>Learning Statistics</h1><p>Detailed breakdown of your progress and study patterns.</p></div>
+      <div class="stats-grid">
+        <div class="stat-card"><h3>Weekly Progress</h3><div id="wk-list"></div></div>
+        <div class="stat-card"><h3>Status Breakdown</h3><div class="donut-wrap"><svg id="donut" width="110" height="110" viewBox="0 0 110 110"></svg><div id="donut-leg"></div></div></div>
+        <div class="stat-card"><h3>Hours by Phase</h3><div id="hrs-list"></div></div>
+        <div class="stat-card"><h3>Milestones</h3><div id="ms-list"></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+</div><!-- end #app -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+const supabase = window.supabase.createClient(
+  "https://vsxwayqlopkhgzrcbjpt.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZzeHdheXFsb3BraGd6cmNianB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODUzMTYsImV4cCI6MjA5MDQ2MTMxNn0.3SMdcF5GDGdUw8p0qkAQ_jcpMAD89bmEIax44Mpk1M8"
+);
+</script>
+
+<script>
+// ════════════════════════════════════════════════════
+// AUTH SYSTEM
+// ════════════════════════════════════════════════════
+const USERS_KEY='ds45_users';
+const SESSION_KEY='ds45_session';
+
+function getUsers(){try{return JSON.parse(localStorage.getItem(USERS_KEY)||'{}');}catch(e){return {};}}
+function saveUsers(u){localStorage.setItem(USERS_KEY,JSON.stringify(u));}
+function getSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||'null');}catch(e){return null;}}
+function setSession(email){localStorage.setItem(SESSION_KEY,JSON.stringify(email));}
+function clearSession(){localStorage.removeItem(SESSION_KEY);}
+
+// Per-user data key
+function userDataKey(email){return `ds45_data_${email.replace(/[^a-z0-9]/gi,'_')}`;}
+function getUserData(email){
+  try{const d=JSON.parse(localStorage.getItem(userDataKey(email))||'null');return d||{days:{},projects:{}};}catch(e){return{days:{},projects:{}};}
+}
+function saveUserData(email,data){localStorage.setItem(userDataKey(email),JSON.stringify(data));}
+
+// Simple hash (not cryptographic — browser-only demo)
+function hashPwd(str){
+  let h=0;for(let i=0;i<str.length;i++){h=Math.imul(31,h)+str.charCodeAt(i)|0;}
+  return h.toString(36);
+}
+
+function getAvatarColors(name){
+  const palettes=[['#E8EEF8','#2B5DA8'],['#E6F5F0','#1A7A60'],['#FDF3E8','#B5600A'],['#EDEAF9','#4A3FA0'],['#FEF6E4','#9A6000']];
+  let h=0;for(let i=0;i<name.length;i++)h=(h<<5)-h+name.charCodeAt(i);
+  return palettes[Math.abs(h)%palettes.length];
+}
+
+function initials(fname,lname){return((fname||'?')[0]+(lname||'')[0]).toUpperCase();}
+
+function setAvatarEl(el,fname,lname,size){
+  if(!el)return;
+  const [bg,fg]=getAvatarColors((fname+lname)||'U');
+  const ini=initials(fname,lname);
+  el.style.background=bg;el.style.color=fg;el.textContent=ini;
+  if(size){el.style.width=size+'px';el.style.height=size+'px';el.style.fontSize=(size*0.38)+'px';}
+}
+
+function showAuthTab(tab){
+  document.getElementById('login-form').style.display=tab==='login'?'':'none';
+  document.getElementById('signup-form').style.display=tab==='signup'?'':'none';
+  document.getElementById('tab-login-btn').classList.toggle('active',tab==='login');
+  document.getElementById('tab-signup-btn').classList.toggle('active',tab==='signup');
+  hideAlert('login-error');hideAlert('signup-error');
+}
+
+function showAlert(id,msg,type){
+  const el=document.getElementById(id);
+  el.textContent=msg;el.className=`alert-msg ${type} show`;
+}
+function hideAlert(id){const el=document.getElementById(id);if(el)el.classList.remove('show');}
+
+function togglePwd(id,btn){
+  const inp=document.getElementById(id);
+  inp.type=inp.type==='password'?'text':'password';
+  btn.textContent=inp.type==='password'?'👁':'🙈';
+}
+
+function checkPwdStrength(pwd){
+  let score=0;
+  if(pwd.length>=8)score++;if(pwd.length>=12)score++;
+  if(/[A-Z]/.test(pwd))score++;if(/[0-9]/.test(pwd))score++;if(/[^A-Za-z0-9]/.test(pwd))score++;
+  const labels=['Too short','Weak','Fair','Good','Strong','Excellent'];
+  const colors=['#E2DED6','#C0392B','#E67E22','#F39C12','#27AE60','#1A7A60'];
+  const pct=Math.round(score/5*100);
+  document.getElementById('strength-fill').style.width=pct+'%';
+  document.getElementById('strength-fill').style.background=colors[score];
+  document.getElementById('strength-label').textContent=labels[score]||'';
+}
+
+async function doSignup(){
+  const fname=document.getElementById('sig-fname').value.trim();
+  const lname=document.getElementById('sig-lname').value.trim();
+  const email=document.getElementById('sig-email').value.trim().toLowerCase();
+  const role=document.getElementById('sig-role').value.trim();
+  const pwd=document.getElementById('sig-pwd').value;
+  const pwd2=document.getElementById('sig-pwd2').value;
+  hideAlert('signup-error');
+
+  if(!fname) return showAlert('signup-error','Please enter your first name.','alert-error');
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showAlert('signup-error','Please enter a valid email address.','alert-error');
+  if(pwd.length<6) return showAlert('signup-error','Password must be at least 6 characters.','alert-error');
+  if(pwd!==pwd2) return showAlert('signup-error','Passwords do not match.','alert-error');
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password: pwd
+  });
+
+  if(error){
+    return showAlert('signup-error', error.message, 'alert-error');
+  }
+
+  const { error: profileError } = await supabase.from('users_profile').insert({
+    id: data.user.id,
+    full_name: `${fname} ${lname}`.trim(),
+    role
+  });
+
+  if(profileError){
+    return showAlert('signup-error', profileError.message, 'alert-error');
+  }
+
+  showAlert('signup-error','Account created successfully. Please sign in.','alert-success');
+  showAuthTab('login');
+  document.getElementById('login-email').value=email;
+  document.getElementById('login-pwd').value='';
+}
+
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim().toLowerCase();
+  const pwd=document.getElementById('login-pwd').value;
+  hideAlert('login-error');
+
+  if(!email) return showAlert('login-error','Please enter your email.','alert-error');
+  if(!pwd) return showAlert('login-error','Please enter your password.','alert-error');
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password: pwd
+  });
+
+  if(error){
+    return showAlert('login-error', error.message, 'alert-error');
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from('users_profile')
+    .select('*')
+    .eq('id', data.user.id)
+    .single();
+
+  if(profileError){
+    return showAlert('login-error', profileError.message, 'alert-error');
+  }
+
+  const fullName=(profile?.full_name || 'User').trim().split(' ');
+  const user={
+    fname: fullName[0] || 'User',
+    lname: fullName.slice(1).join(' '),
+    email: data.user.email,
+    role: profile?.role || 'Data Analyst'
+  };
+
+  launchApp(user);
+}
+
+function doLogout(){
+  clearSession();
+  document.getElementById('app').style.display='none';
+  document.getElementById('auth-overlay').style.display='flex';
+  document.getElementById('login-email').value='';
+  document.getElementById('login-pwd').value='';
+  showAuthTab('login');
+  closeUserMenu();
+}
+
+function launchApp(user){
+  document.getElementById('auth-overlay').style.display='none';
+  document.getElementById('app').style.display='block';
+  CUR_USER=user;
+  S=getUserData(user.email);
+  // Initialize missing day/project entries
+  DAYS.forEach(d=>{if(!S.days[d.d])S.days[d.d]={status:"Not Started",hours:0,notes:""};});
+  PROJECTS.forEach(p=>{if(!S.projects[p.id])S.projects[p.id]={status:"Not Started",github:"",live:""};});
+  updateUserUI(user);
+  renderTracker();renderProjects();renderResources();updateMetrics();renderRecent();
+  // Go to dashboard
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tab-dashboard').classList.add('active');
+  document.querySelectorAll('.nav-item')[0].classList.add('active');
+}
+
+function updateUserUI(user){
+  const name=`${user.fname} ${user.lname}`.trim();
+  document.getElementById('menu-name').textContent=name||user.email;
+  document.getElementById('menu-email').textContent=user.email;
+  document.getElementById('sidebar-name').textContent=name||user.email;
+  document.getElementById('sidebar-role').textContent=user.role||'Data Analyst';
+  document.getElementById('dash-greeting').textContent=`Welcome back, ${user.fname||'there'} 👋`;
+  setAvatarEl(document.getElementById('topbar-avatar'),user.fname,user.lname,34);
+  setAvatarEl(document.getElementById('sidebar-avatar'),user.fname,user.lname,28);
+  setAvatarEl(document.getElementById('prof-avatar-big'),user.fname,user.lname,64);
+}
+
+function toggleUserMenu(){
+  const m=document.getElementById('user-menu');
+  m.style.display=m.style.display==='none'?'block':'none';
+}
+function closeUserMenu(){document.getElementById('user-menu').style.display='none';}
+document.addEventListener('click',function(e){
+  if(!document.getElementById('user-menu-wrap').contains(e.target))closeUserMenu();
+});
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+function openProfile(){
+  closeUserMenu();
+  const u=CUR_USER;
+  document.getElementById('prof-fname').value=u.fname||'';
+  document.getElementById('prof-lname').value=u.lname||'';
+  document.getElementById('prof-email').value=u.email||'';
+  document.getElementById('prof-role').value=u.role||'';
+  document.getElementById('prof-cur-pwd').value='';
+  document.getElementById('prof-new-pwd').value='';
+  hideAlert('prof-success');hideAlert('prof-error');
+  setAvatarEl(document.getElementById('prof-avatar-big'),u.fname,u.lname,64);
+  openModal('profile-modal');
+}
+
+function saveProfile(){
+  hideAlert('prof-success');hideAlert('prof-error');
+  const fname=document.getElementById('prof-fname').value.trim();
+  const lname=document.getElementById('prof-lname').value.trim();
+  const email=document.getElementById('prof-email').value.trim().toLowerCase();
+  const role=document.getElementById('prof-role').value.trim();
+  const curPwd=document.getElementById('prof-cur-pwd').value;
+  const newPwd=document.getElementById('prof-new-pwd').value;
+  if(!fname){return showAlert('prof-error','First name is required.','alert-error');}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){return showAlert('prof-error','Enter a valid email.','alert-error');}
+  const users=getUsers();
+  // Handle email change
+  if(email!==CUR_USER.email&&users[email]){return showAlert('prof-error','That email is already used by another account.','alert-error');}
+  // Handle password change
+  if(newPwd){
+    if(!curPwd){return showAlert('prof-error','Enter your current password to set a new one.','alert-error');}
+    if(users[CUR_USER.email].pwd!==hashPwd(curPwd)){return showAlert('prof-error','Current password is incorrect.','alert-error');}
+    if(newPwd.length<6){return showAlert('prof-error','New password must be at least 6 characters.','alert-error');}
+  }
+  // Save
+  const oldEmail=CUR_USER.email;
+  const updated={...users[oldEmail],fname,lname,email,role};
+  if(newPwd)updated.pwd=hashPwd(newPwd);
+  // If email changed, migrate data
+  if(email!==oldEmail){
+    const data=getUserData(oldEmail);
+    saveUserData(email,data);
+    delete users[oldEmail];
+  }
+  users[email]=updated;
+  saveUsers(users);
+  setSession(email);
+  CUR_USER=updated;
+  updateUserUI(updated);
+  showAlert('prof-success','Profile updated successfully!','alert-success');
+  setAvatarEl(document.getElementById('prof-avatar-big'),fname,lname,64);
+}
+
+function doReset(){
+  const val=document.getElementById('reset-confirm').value.trim();
+  if(val!=='RESET'){alert('Please type RESET to confirm.');return;}
+  S={days:{},projects:{}};
+  DAYS.forEach(d=>{S.days[d.d]={status:"Not Started",hours:0,notes:""}; });
+  PROJECTS.forEach(p=>{S.projects[p.id]={status:"Not Started",github:"",live:""};});
+  saveUserData(CUR_USER.email,S);
+  closeModal('reset-modal');
+  document.getElementById('reset-confirm').value='';
+  renderTracker();renderProjects();updateMetrics();renderRecent();
+}
+
+// ════════════════════════════════════════════════════
+// APP DATA
+// ════════════════════════════════════════════════════
+let CUR_USER=null;
+let S={days:{},projects:{}};
+
+const DAYS=[
+  {d:1,ph:"P1",t:"Pandas Basics — DataFrames, Series, indexing",r:"Corey Schafer Pandas Series",u:"https://youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS",c:"DataFrames, loc/iloc, head/tail, dtypes",task:"Load NYC Airbnb CSV, explore shape & columns",prj:false},
+  {d:2,ph:"P1",t:"Pandas — groupby, merge, pivot tables",r:"Keith Galli Pandas Tutorial",u:"https://youtube.com/watch?v=vmEHCJofslg",c:"groupby, merge, pivot_table, agg",task:"Replicate 5 SQL GROUP BY queries in Pandas",prj:false},
+  {d:3,ph:"P1",t:"NumPy — arrays, broadcasting, vectorized ops",r:"freeCodeCamp NumPy Full Course",u:"https://youtube.com/watch?v=QUT1VHiLmmI",c:"ndarray, reshape, broadcasting, np.where",task:"Create 2D array, compute row/col statistics",prj:false},
+  {d:4,ph:"P1",t:"Statistical thinking in code — distributions, tests",r:"StatQuest Fundamentals",u:"https://youtube.com/channel/UCtYLUTtgS3k1Fg4y5tAhLbw",c:"mean, std, percentiles, z-score, correlation",task:"Compute descriptive stats on Airbnb dataset",prj:false},
+  {d:5,ph:"P1",t:"Matplotlib & Seaborn — distribution & bar charts",r:"Sentdex Matplotlib Series",u:"https://youtube.com/playlist?list=PLQVvvaa0QuDfefDfXb9Yf0la1fPDKluPF",c:"plt.plot, sns.histplot, sns.boxplot, subplots",task:"Plot price distribution by neighborhood type",prj:false},
+  {d:6,ph:"P1",t:"Plotly & Full EDA — interactive data report",r:"Alex The Analyst — Seaborn",u:"https://youtube.com/watch?v=6GUZXDef2U0",c:"plotly.express, px.scatter, correlation heatmap",task:"PROJECT: Full EDA on Superstore Sales dataset",prj:true,pn:"Superstore Sales EDA"},
+  {d:7,ph:"P1",t:"Data Cleaning — nulls, duplicates, data types",r:"Krish Naik — Data Cleaning",u:"https://youtube.com/watch?v=ZOX18HfLHGQ",c:"fillna, dropna, astype, duplicated, replace",task:"Clean WHO COVID-19 dataset — fix nulls & types",prj:false},
+  {d:8,ph:"P1",t:"Outlier detection — IQR, Z-score, visualization",r:"Rob Mulla — EDA Real World",u:"https://youtube.com/watch?v=bDhvCp3_lYw",c:"IQR fencing, z-score threshold, box plots",task:"Detect outliers in COVID cases, document findings",prj:false},
+  {d:9,ph:"P1",t:"Feature Engineering — encoding categoricals",r:"Krish Naik — Feature Engineering",u:"https://youtube.com/watch?v=viQuFHCbFR8",c:"pd.get_dummies, LabelEncoder, TargetEncoder",task:"Encode Airbnb neighborhood & room_type columns",prj:false},
+  {d:10,ph:"P1",t:"Scaling & normalization — StandardScaler, MinMax",r:"StatQuest — Normalization",u:"https://youtube.com/channel/UCtYLUTtgS3k1Fg4y5tAhLbw",c:"StandardScaler, MinMaxScaler, RobustScaler",task:"Scale numerical features, compare distributions",prj:false},
+  {d:11,ph:"P1",t:"Datetime features — parsing, lag, rolling",r:"Pandas Time Series Docs",u:"https://pandas.pydata.org/docs/user_guide/timeseries.html",c:"pd.to_datetime, dt accessor, rolling, shift",task:"Parse Superstore dates, extract month & quarter",prj:false},
+  {d:12,ph:"P1",t:"Capstone 1 — Full EDA on House Prices (Kaggle)",r:"Kaggle House Prices Competition",u:"https://kaggle.com/competitions/house-prices-advanced-regression-techniques",c:"End-to-end EDA: clean → feature → visualize",task:"CAPSTONE: EDA notebook, submit to Kaggle",prj:true,pn:"Kaggle House Prices EDA (Capstone 1)"},
+  {d:13,ph:"P2",t:"Linear Regression — OLS, assumptions, sklearn",r:"StatQuest — Linear Regression",u:"https://youtube.com/watch?v=7ArmBVF2dCs",c:"fit, predict, coef_, intercept_, R², MSE",task:"Predict house prices with LinearRegression",prj:false},
+  {d:14,ph:"P2",t:"Logistic Regression — sigmoid, classification",r:"StatQuest — Logistic Regression",u:"https://youtube.com/watch?v=nk2CQITm_eo",c:"LogisticRegression, predict_proba, confusion matrix",task:"PROJECT: Telco Churn — train logistic model",prj:true,pn:"Telco Churn Predictor"},
+  {d:15,ph:"P2",t:"Decision Trees — split criteria, overfitting",r:"StatQuest — Decision Trees",u:"https://youtube.com/watch?v=7VeUPuFGJHk",c:"DecisionTreeClassifier, max_depth, gini, entropy",task:"Train decision tree on churn, visualize the tree",prj:false},
+  {d:16,ph:"P2",t:"Random Forests — ensemble, feature importance",r:"StatQuest — Random Forests",u:"https://youtube.com/watch?v=J4Wdy0Wc_xQ",c:"RandomForestClassifier, feature_importances_",task:"PROJECT: Credit Risk — Kaggle Give Me Some Credit",prj:true,pn:"Credit Risk Scorer (XGBoost)"},
+  {d:17,ph:"P2",t:"XGBoost — gradient boosting, hyperparameter tuning",r:"StatQuest — XGBoost Series",u:"https://youtube.com/watch?v=TyvYZ26alZs",c:"XGBClassifier, n_estimators, learning_rate, depth",task:"Train XGBoost on credit data, compare to RF",prj:false},
+  {d:18,ph:"P2",t:"Model Evaluation — CV, ROC-AUC, GridSearchCV",r:"StatQuest — Cross Validation",u:"https://youtube.com/watch?v=fSytzGwwBVw",c:"cross_val_score, roc_auc_score, GridSearchCV",task:"Full evaluation pipeline on the credit risk model",prj:false},
+  {d:19,ph:"P2",t:"Clustering — K-Means, elbow method",r:"StatQuest — K-Means",u:"https://youtube.com/watch?v=4b5d3muPQmA",c:"KMeans, inertia_, silhouette_score, elbow plot",task:"Segment customers using Online Retail dataset",prj:false},
+  {d:20,ph:"P2",t:"DBSCAN & Hierarchical clustering",r:"Krish Naik — Clustering",u:"https://youtube.com/watch?v=_Po6_i4Tbvw",c:"DBSCAN, AgglomerativeClustering, dendrogram",task:"Apply DBSCAN to Online Retail, compare results",prj:false},
+  {d:21,ph:"P2",t:"RFM Analysis + cluster profiling",r:"Towards Data Science — RFM",u:"https://towardsdatascience.com",c:"Recency, Frequency, Monetary, cluster profiles",task:"PROJECT: Full RFM segmentation, Streamlit ready",prj:true,pn:"Customer RFM Segmentation"},
+  {d:22,ph:"P2",t:"PCA — explained variance, scree plot",r:"StatQuest — PCA Step-by-Step",u:"https://youtube.com/watch?v=FgakZw6K1QQ",c:"PCA, explained_variance_ratio_, components_",task:"Reduce Airbnb features to 2D, visualize clusters",prj:false},
+  {d:23,ph:"P2",t:"Time Series — stationarity, ARIMA",r:"Ritvikmath — Time Series Channel",u:"https://youtube.com/c/ritvikmath",c:"ADF test, ARIMA, differencing, ACF/PACF plots",task:"Test NIFTY 50 data for stationarity",prj:false},
+  {d:24,ph:"P2",t:"Prophet forecasting — trend, seasonality",r:"Greg Kamradt — Prophet Tutorial",u:"https://youtube.com/watch?v=e8Yw4alG16Q",c:"Prophet, make_future_dataframe, plot_components",task:"PROJECT: 30-day forecast with yfinance + Prophet",prj:true,pn:"Stock / NIFTY50 Forecaster"},
+  {d:25,ph:"P3",t:"Neural Network intuition — perceptrons, layers",r:"3Blue1Brown — Neural Networks",u:"https://youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi",c:"activation functions, weights, biases, forward pass",task:"Draw NN architecture, understand tensor shapes",prj:false},
+  {d:26,ph:"P3",t:"Keras — build first neural net on tabular data",r:"freeCodeCamp — Deep Learning",u:"https://youtube.com/watch?v=tPYj3fFJGjk",c:"Sequential, Dense, compile, fit, evaluate",task:"Build NN for House Prices regression in Keras",prj:false},
+  {d:27,ph:"P3",t:"NLP basics — tokenization, TF-IDF, BOW",r:"StatQuest — Word Embedding",u:"https://youtube.com/watch?v=8rXD5-xhemo",c:"TfidfVectorizer, CountVectorizer, stopwords",task:"Vectorize Amazon product reviews text",prj:false},
+  {d:28,ph:"P3",t:"Sentiment analysis — BERT via HuggingFace",r:"Andrej Karpathy — Let's Build GPT",u:"https://youtube.com/watch?v=xI0HHN5XKDo",c:"pipeline, AutoTokenizer, zero-shot classification",task:"PROJECT: Amazon Reviews sentiment Streamlit app",prj:true,pn:"Amazon Reviews Sentiment App"},
+  {d:29,ph:"P3",t:"sklearn Pipelines — reusable ML workflows",r:"Krish Naik — sklearn Pipelines",u:"https://youtube.com/watch?v=0xXmEBrR0g8",c:"Pipeline, ColumnTransformer, make_pipeline",task:"Build full pipeline: preprocess → model → predict",prj:false},
+  {d:30,ph:"P3",t:"MLflow — experiment tracking, model registry",r:"Krish Naik — MLflow Tutorial",u:"https://youtube.com/watch?v=kshjh7nOBuY",c:"mlflow.start_run, log_params, log_metrics, register",task:"Track 3 experiments on churn model with MLflow",prj:false},
+  {d:31,ph:"P3",t:"Streamlit — build interactive ML web app",r:"Patrick Loeber — Streamlit Full Course",u:"https://youtube.com/watch?v=VqgUkExPvLY",c:"st.slider, st.selectbox, st.dataframe",task:"Deploy churn predictor as a Streamlit web app",prj:false},
+  {d:32,ph:"P3",t:"FastAPI — REST API for model serving",r:"TechWithTim — FastAPI Crash Course",u:"https://youtube.com/watch?v=0sOvCWFmrtA",c:"FastAPI, BaseModel, POST endpoint, uvicorn",task:"Wrap trained model in FastAPI, test with curl",prj:false},
+  {d:33,ph:"P3",t:"Advanced SQL — window functions for DS",r:"Alex The Analyst — Advanced SQL",u:"https://youtube.com/watch?v=Bnk0mwZNVxA",c:"RANK(), LAG(), LEAD(), NTILE(), running totals",task:"Write 5 window function queries on Northwind DB",prj:false},
+  {d:34,ph:"P3",t:"SQLAlchemy — SQL → Pandas data pipeline",r:"SQLAlchemy Official Documentation",u:"https://docs.sqlalchemy.org",c:"create_engine, pd.read_sql, connection pooling",task:"PROJECT: Northwind DB → ML churn prediction",prj:true,pn:"Northwind SQL → ML Pipeline"},
+  {d:35,ph:"P3",t:"A/B Testing — hypothesis testing in Python",r:"StatQuest — A/B Testing",u:"https://youtube.com/watch?v=lMkIobAGcME",c:"scipy.stats.ttest_ind, chi2_contingency, p-value",task:"Run A/B test simulation on e-commerce data",prj:false},
+  {d:36,ph:"P3",t:"Causal Inference — difference-in-differences",r:"CausalPython YouTube channel",u:"https://youtube.com/watch?v=QhEE0l8s21Y",c:"counterfactual, treatment/control, DiD estimator",task:"Analyze causal effect in retail promotion data",prj:false},
+  {d:37,ph:"P4",t:"Capstone A — Employee Attrition Predictor",r:"Data Professor — End-to-End ML App",u:"https://youtube.com/watch?v=xl0N7tHiwlw",c:"IBM HR dataset, XGBoost, SHAP explanations",task:"CAPSTONE A: Full pipeline + Streamlit deploy",prj:true,pn:"Employee Attrition Predictor (Capstone A)"},
+  {d:38,ph:"P4",t:"Capstone A — SHAP values & model explainability",r:"Krish Naik — SHAP Tutorial",u:"https://youtube.com/watch?v=_mzRlFaOqCY",c:"shap.TreeExplainer, force_plot, summary_plot",task:"Add SHAP plots and explanations to Streamlit app",prj:false},
+  {d:39,ph:"P4",t:"Capstone A — Deploy on Streamlit Community Cloud",r:"Streamlit Community Cloud Docs",u:"https://docs.streamlit.io/streamlit-community-cloud",c:"requirements.txt, GitHub deploy, shareable URL",task:"Get live public URL, test with 5 different inputs",prj:false},
+  {d:40,ph:"P4",t:"Capstone B — Live API data pipeline",r:"Alpha Vantage Free API Docs",u:"https://alphavantage.co",c:"requests, JSON parsing, SQLite storage, pandas",task:"CAPSTONE B: Pull live market or weather data",prj:true,pn:"Live Market Dashboard (Capstone B)"},
+  {d:41,ph:"P4",t:"Capstone B — Prophet forecast dashboard deploy",r:"Greg Kamradt — Prophet Forecasting",u:"https://youtube.com/watch?v=e8Yw4alG16Q",c:"st.cache_data, live charts, Prophet integration",task:"Build & deploy live forecasting Streamlit dashboard",prj:false},
+  {d:42,ph:"P4",t:"GitHub Portfolio — READMEs, pinned repos",r:"Ken Jee — DS Portfolio Guide",u:"https://youtube.com/watch?v=G-EGDH50hGE",c:"README structure, badges, demo GIFs, live links",task:"Polish all repos, write professional READMEs",prj:false},
+  {d:43,ph:"P4",t:"DS Interview Prep — ML concept questions",r:"Ken Jee — DS Interview Questions",u:"https://youtube.com/watch?v=MBjEMpSHLHo",c:"Bias-variance, regularization, model selection",task:"Answer 20 ML concept questions out loud",prj:false},
+  {d:44,ph:"P4",t:"DS Interview Prep — Stats & SQL case studies",r:"Tina Huang — How to Pass DS Interviews",u:"https://youtube.com/watch?v=BHdEPbT2pVU",c:"CLT, hypothesis tests, SQL window functions",task:"Complete 3 mock SQL case study problems",prj:false},
+  {d:45,ph:"P4",t:"Career Positioning & LinkedIn Profile Update",r:"Ken Jee — LinkedIn for Data Science",u:"https://youtube.com/watch?v=G-EGDH50hGE",c:"Analyst→DS narrative, domain expertise framing",task:"Update LinkedIn, Kaggle profile, and DS resume",prj:false},
+];
+
+const PROJECTS=DAYS.filter(d=>d.prj).map((d,i)=>({
+  id:i+1,day:d.d,ph:d.ph,name:d.pn,
+  dataset:{6:"Superstore Sales (Kaggle)",12:"House Prices (Kaggle)",14:"Telco Churn (Kaggle)",16:"Give Me Some Credit (Kaggle)",21:"Online Retail II (UCI ML Repo)",24:"Yahoo Finance via yfinance",28:"Amazon Product Reviews (Kaggle)",34:"Northwind DB (GitHub, free)",37:"IBM HR Analytics (Kaggle)",40:"Alpha Vantage API / Open-Meteo"}[d.d]||"See tracker",
+  skills:{6:["Pandas","Seaborn","Plotly","EDA"],12:["EDA","Feature Eng.","Kaggle"],14:["LogisticReg","ROC-AUC","Sklearn"],16:["XGBoost","GridSearchCV","Feature Importance"],21:["K-Means","RFM","Streamlit"],24:["Prophet","Time Series","yfinance"],28:["NLP","TF-IDF","HuggingFace","BERT"],34:["SQLAlchemy","SQL","ML Pipeline"],37:["XGBoost","SHAP","MLflow","Streamlit"],40:["FastAPI","Prophet","REST API","Deployment"]}[d.d]||["ML","Python"],
+  isCapstone:d.pn&&d.pn.includes("Capstone")
+}));
+
+const CHANNELS=[
+  {n:"StatQuest",d:"Gold standard for ML intuition — every algorithm with clarity.",u:"youtube.com/c/joshstarmer",i:"📊"},
+  {n:"Krish Naik",d:"End-to-end ML projects, Python, deployment workflows.",u:"youtube.com/krishnaik06",i:"⚙️"},
+  {n:"Corey Schafer",d:"Clean, detailed Python tutorials covering Pandas and Matplotlib.",u:"youtube.com/coreyms",i:"🐍"},
+  {n:"3Blue1Brown",d:"Visual mathematics — neural nets, linear algebra, calculus.",u:"youtube.com/3blue1brown",i:"🧮"},
+  {n:"Ritvikmath",d:"Time series, Bayesian stats, and probability deep dives.",u:"youtube.com/ritvikmath",i:"📈"},
+  {n:"Ken Jee",d:"DS career, portfolio building, analytics-to-DS transition.",u:"youtube.com/kenjee",i:"💼"},
+  {n:"Alex The Analyst",d:"SQL advanced, Pandas, and the real analyst-to-DS bridge.",u:"youtube.com/alextheanalyst",i:"🔍"},
+  {n:"freeCodeCamp",d:"Full structured courses: NumPy, Deep Learning, ML.",u:"youtube.com/freecodecamp",i:"🎓"},
+];
+const DATASETS=[
+  {n:"Kaggle",d:"Competitions, notebooks, datasets, DS courses",u:"kaggle.com",i:"🏆"},
+  {n:"UCI ML Repository",d:"Classic academic datasets — Online Retail II, Wine Quality",u:"archive.ics.uci.edu",i:"🔬"},
+  {n:"Yahoo Finance (yfinance)",d:"Live & historical stock data via Python",u:"pypi.org/project/yfinance",i:"📉"},
+  {n:"Alpha Vantage",d:"Free API: stocks, forex, crypto — 500 calls/day",u:"alphavantage.co",i:"📡"},
+  {n:"Open-Meteo",d:"Free weather API, no key required, worldwide",u:"open-meteo.com",i:"🌦"},
+  {n:"WHO Global Data",d:"COVID-19 global data, health statistics",u:"who.int/data",i:"🌍"},
+  {n:"World Bank Open Data",d:"Economic & development indicators",u:"data.worldbank.org",i:"🏦"},
+  {n:"Google Dataset Search",d:"Indexed datasets from across the web",u:"datasetsearch.research.google.com",i:"🔎"},
+];
+
+const PH_COLORS={P1:"#4A3FA0",P2:"#1A7A60",P3:"#B5600A",P4:"#2B5DA8"};
+const PH_BGS={P1:"#EDEAF9",P2:"#E6F5F0",P3:"#FDF3E8",P4:"#EBF0FA"};
+const PH_NAMES={P1:"Phase 1",P2:"Phase 2",P3:"Phase 3",P4:"Phase 4"};
+const PH_TOT={P1:12,P2:12,P3:12,P4:9};
+
+function save(){if(CUR_USER)saveUserData(CUR_USER.email,S);}
+
+function switchTab(id,el){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+  if(id==='stats')renderStats();
+  if(id==='dashboard'){renderRecent();updateMetrics();}
+  if(id==='projects')renderProjSummary();
+}
+function gotoPhase(ph){
+  switchTab('tracker',document.querySelectorAll('.nav-item')[1]);
+  setTimeout(()=>{const el=document.querySelector(`[data-ph="${ph}"]`);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},80);
+}
+
+function scls(s){return{Completed:"s-completed","In Progress":"s-in-progress",Skipped:"s-skipped","Not Started":""}[s]||"";}
+
+function renderTracker(){
+  const tbody=document.getElementById('tbody');tbody.innerHTML='';let lastPh=null;
+  DAYS.forEach(d=>{
+    if(d.ph!==lastPh){
+      lastPh=d.ph;
+      const plab={P1:"⚡ Phase 1 · Python & EDA (Days 1–12)",P2:"🤖 Phase 2 · ML Core (Days 13–24)",P3:"🔬 Phase 3 · Advanced ML & NLP (Days 25–36)",P4:"🚀 Phase 4 · Portfolio & Career (Days 37–45)"};
+      const tr=document.createElement('tr');tr.setAttribute('data-ph-hdr',d.ph);tr.setAttribute('data-ph',d.ph);tr.style.cssText=`background:${PH_BGS[d.ph]};cursor:default`;
+      tr.innerHTML=`<td colspan="8" style="padding:9px 14px;pointer-events:none"><span style="font-size:11px;font-weight:600;color:${PH_COLORS[d.ph]}">${plab[d.ph]}</span></td>`;
+      tbody.appendChild(tr);
+    }
+    const s=S.days[d.d];const tr=document.createElement('tr');
+    tr.setAttribute('data-day',d.d);tr.setAttribute('data-ph',d.ph);tr.setAttribute('data-prj',d.prj?'1':'0');tr.setAttribute('data-status',s.status);
+    if(s.status==='Completed')tr.classList.add('row-completed');
+    const flag=d.prj?(d.pn&&d.pn.includes('Capstone')?`<div class="project-flag capstone-flag">🏆 Capstone</div>`:`<div class="project-flag">◎ Project</div>`):'';
+    tr.innerHTML=`<td><div class="day-badge" style="background:${PH_BGS[d.ph]};color:${PH_COLORS[d.ph]}">${String(d.d).padStart(2,'0')}</div></td>
+      <td><div class="topic-title">${d.t}</div>${flag}</td>
+      <td><a href="${d.u}" target="_blank" class="resource-link">▶ ${d.r}</a></td>
+      <td><span style="font-size:11px;color:var(--text-secondary)">${d.c}</span></td>
+      <td><span style="font-size:11px;color:var(--text-secondary)">${d.task}</span></td>
+      <td><select class="status-sel ${scls(s.status)}" onchange="updStatus(${d.d},this.value,this)"><option ${s.status==='Not Started'?'selected':''}>Not Started</option><option ${s.status==='In Progress'?'selected':''}>In Progress</option><option ${s.status==='Completed'?'selected':''}>Completed</option><option ${s.status==='Skipped'?'selected':''}>Skipped</option></select></td>
+      <td><input class="time-input" type="number" min="0" max="24" step="0.5" value="${s.hours||0}" onchange="updHours(${d.d},parseFloat(this.value)||0)"></td>
+      <td><textarea class="notes-input" rows="1" placeholder="Notes…" onchange="updNotes(${d.d},this.value)">${s.notes||''}</textarea></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function updStatus(day,val,sel){S.days[day].status=val;sel.className=`status-sel ${scls(val)}`;const tr=sel.closest('tr');tr.setAttribute('data-status',val);if(val==='Completed')tr.classList.add('row-completed');else tr.classList.remove('row-completed');save();updateMetrics();}
+function updHours(day,val){S.days[day].hours=val;save();updateMetrics();}
+function updNotes(day,val){S.days[day].notes=val;save();}
+function filterBy(f,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('srch').value='';
+  document.querySelectorAll('#tbody tr').forEach(tr=>{
+    if(tr.hasAttribute('data-ph-hdr')){const ph=tr.getAttribute('data-ph');tr.style.display=(f==='all'||f===ph)?'':'none';return;}
+    const ph=tr.getAttribute('data-ph'),isPrj=tr.getAttribute('data-prj')==='1',st=tr.getAttribute('data-status');
+    let show=true;
+    if(['P1','P2','P3','P4'].includes(f))show=ph===f;
+    else if(f==='project')show=isPrj;
+    else if(f==='completed')show=st==='Completed';
+    else if(f==='pending')show=st!=='Completed'&&st!=='Skipped';
+    tr.style.display=show?'':'none';
+  });
+}
+function doSearch(q){
+  q=q.toLowerCase();
+  document.querySelectorAll('#tbody tr').forEach(tr=>{if(tr.hasAttribute('data-ph-hdr')){tr.style.display='';return;}tr.style.display=tr.textContent.toLowerCase().includes(q)?'':'none';});
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));document.querySelector('.filter-btn').classList.add('active');
+}
+function renderProjects(){
+  const grid=document.getElementById('proj-grid');grid.innerHTML='';
+  PROJECTS.forEach(p=>{
+    const s=S.projects[p.id];const sc={Completed:"s-completed",Deployed:"s-deployed","In Progress":"s-in-progress","Not Started":""}[s.status]||"";
+    const cap=p.isCapstone?`<div class="capstone-badge">🏆 Capstone</div>`:'';
+    const skills=p.skills.map(sk=>`<span class="skill-tag">${sk}</span>`).join('');
+    const card=document.createElement('div');card.className='project-card';
+    card.innerHTML=`<div style="position:absolute;top:0;left:0;right:0;height:3px;background:${PH_COLORS[p.ph]};border-radius:var(--radius-lg) var(--radius-lg) 0 0"></div>
+      <div class="project-num">Project ${p.id} · Day ${p.day} · ${PH_NAMES[p.ph]}</div>
+      <div class="project-title">${p.name}</div><div class="project-dataset">📦 ${p.dataset}</div>
+      <div class="project-skills">${skills}</div>${cap}
+      <select class="project-status-sel ${sc}" onchange="updProjStatus(${p.id},this.value,this)"><option ${s.status==='Not Started'?'selected':''}>Not Started</option><option ${s.status==='In Progress'?'selected':''}>In Progress</option><option ${s.status==='Completed'?'selected':''}>Completed</option><option ${s.status==='Deployed'?'selected':''}>Deployed</option></select>
+      <div style="margin-top:8px"><input class="url-input" type="text" placeholder="GitHub repo URL…" value="${s.github||''}" onchange="updProjLink(${p.id},'github',this.value)"><input class="url-input" type="text" placeholder="Live app URL…" value="${s.live||''}" onchange="updProjLink(${p.id},'live',this.value)"></div>`;
+    grid.appendChild(card);
+  });
+}
+function updProjStatus(id,val,sel){S.projects[id].status=val;const m={Completed:"s-completed",Deployed:"s-deployed","In Progress":"s-in-progress","Not Started":""};sel.className=`project-status-sel ${m[val]||''}`;save();updateMetrics();renderProjSummary();}
+function updProjLink(id,f,v){S.projects[id][f]=v;save();}
+function renderProjSummary(){const done=Object.values(S.projects).filter(p=>p.status==='Completed'||p.status==='Deployed').length;const dep=Object.values(S.projects).filter(p=>p.status==='Deployed').length;document.getElementById('pj-done').textContent=done;document.getElementById('pj-dep').textContent=dep;}
+function renderResources(){
+  const cg=document.getElementById('ch-grid');cg.innerHTML='';
+  CHANNELS.forEach(c=>{cg.innerHTML+=`<div class="resource-card"><div class="resource-card-icon">${c.i}</div><div class="resource-card-name">${c.n}</div><div class="resource-card-desc">${c.d}</div><a href="https://${c.u}" target="_blank" class="resource-card-url">↗ ${c.u}</a></div>`;});
+  const dg=document.getElementById('ds-grid');dg.innerHTML='';
+  DATASETS.forEach(d=>{dg.innerHTML+=`<div class="dataset-item"><div class="dataset-icon">${d.i}</div><div><div class="dataset-name">${d.n}</div><div class="dataset-meta">${d.d}</div><a href="https://${d.u}" target="_blank" style="font-size:11px;color:var(--accent-blue);font-weight:500;text-decoration:none">↗ ${d.u}</a></div></div>`;});
+}
+function calcMetrics(){
+  const cmp=DAYS.filter(d=>S.days[d.d]?.status==='Completed').length;
+  const inp=DAYS.filter(d=>S.days[d.d]?.status==='In Progress').length;
+  const skp=DAYS.filter(d=>S.days[d.d]?.status==='Skipped').length;
+  const hrs=DAYS.reduce((s,d)=>s+(parseFloat(S.days[d.d]?.hours)||0),0);
+  const pct=Math.round(cmp/45*100);
+  const phaseDone={};['P1','P2','P3','P4'].forEach(ph=>{phaseDone[ph]=DAYS.filter(d=>d.ph===ph&&S.days[d.d]?.status==='Completed').length;});
+  const prjDone=Object.values(S.projects).filter(p=>p.status==='Completed'||p.status==='Deployed').length;
+  return{cmp,inp,skp,hrs,pct,phaseDone,prjDone,ns:45-cmp-inp-skp};
+}
+function updateMetrics(){
+  const m=calcMetrics();
+  document.getElementById('tb-days').textContent=m.cmp;document.getElementById('tb-hours').textContent=m.hrs.toFixed(1);
+  document.getElementById('sb-pct').textContent=m.pct+'%';document.getElementById('sb-sub').textContent=`${m.cmp} of 45 days complete`;document.getElementById('sb-fill').style.width=m.pct+'%';
+  document.getElementById('nav-rem').textContent=45-m.cmp;document.getElementById('nav-proj').textContent=`${m.prjDone}/12`;
+  ['P1','P2','P3','P4'].forEach((ph,i)=>{document.getElementById(`ph${i+1}-sb`).textContent=`${m.phaseDone[ph]}/${PH_TOT[ph]}`;});
+  document.getElementById('kpi-d').textContent=m.cmp;document.getElementById('kpi-p').textContent=m.pct+'%';
+  document.getElementById('kpi-psub').textContent=(45-m.cmp)+' days remaining';
+  document.getElementById('kpi-prj').textContent=m.prjDone;document.getElementById('kpi-h').textContent=Math.round(m.hrs);
+  document.getElementById('kpi-hsub').textContent=m.cmp>0?`~${(m.hrs/m.cmp).toFixed(1)} hrs/day avg`:'~0 hrs/day';
+  ['P1','P2','P3','P4'].forEach((ph,i)=>{const tot=PH_TOT[ph],done=m.phaseDone[ph],pct=Math.round(done/tot*100);document.getElementById(`p${i+1}-pct`).textContent=pct+'%';document.getElementById(`p${i+1}-bar`).style.width=pct+'%';document.getElementById(`p${i+1}-d`).textContent=done;document.getElementById(`p${i+1}-r`).textContent=tot-done;});
+  if(m.cmp===45)document.getElementById('celebrate').classList.add('show');else document.getElementById('celebrate').classList.remove('show');
+}
+function renderRecent(){
+  const done=DAYS.filter(d=>S.days[d.d]?.status==='Completed').sort((a,b)=>b.d-a.d).slice(0,5);
+  const box=document.getElementById('recent-box');
+  if(!done.length){box.innerHTML=`<div style="padding:36px;text-align:center;color:var(--text-muted);font-size:13px">No activity yet. Head to <strong>Daily Tracker</strong> to get started.</div>`;return;}
+  box.innerHTML=done.map(d=>`<div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border)"><div style="width:28px;height:28px;border-radius:6px;background:${PH_BGS[d.ph]};color:${PH_COLORS[d.ph]};display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;flex-shrink:0">${String(d.d).padStart(2,'0')}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${d.t}</div><div style="font-size:11px;color:var(--text-muted);margin-top:1px">${PH_NAMES[d.ph]} · ${S.days[d.d]?.hours||0}h logged</div></div><span style="font-size:11px;font-weight:600;color:var(--green);background:var(--green-bg);padding:3px 9px;border-radius:4px">✓ Done</span></div>`).join('')+(done.length===5?`<div style="padding:9px 16px;font-size:11px;color:var(--text-muted)">Showing last 5 completed days</div>`:'');
+  if(box.lastElementChild)box.lastElementChild.style.borderBottom='none';
+}
+function renderStats(){
+  const m=calcMetrics();
+  const weeks=[{l:"Week 1",days:[1,2,3,4,5,6]},{l:"Week 2",days:[7,8,9,10,11,12]},{l:"Week 3",days:[13,14,15,16,17,18]},{l:"Week 4",days:[19,20,21,22,23,24]},{l:"Week 5",days:[25,26,27,28,29,30]},{l:"Week 6",days:[31,32,33,34,35,36]},{l:"Week 7+",days:[37,38,39,40,41,42,43,44,45]}];
+  const wc=['#4A3FA0','#4A3FA0','#1A7A60','#1A7A60','#B5600A','#B5600A','#2B5DA8'];
+  document.getElementById('wk-list').innerHTML=weeks.map((w,i)=>{const done=w.days.filter(d=>S.days[d]?.status==='Completed').length,pct=Math.round(done/w.days.length*100);return `<div class="week-row"><div class="week-label">${w.l}</div><div class="week-bar-track"><div class="week-bar-fill" style="width:${pct}%;background:${wc[i]}"></div></div><div class="week-count">${done}/${w.days.length}</div></div>`;}).join('');
+  const segs=[{v:m.cmp,c:'#2D7D4F',l:'Completed'},{v:m.inp,c:'#9A6000',l:'In Progress'},{v:m.skp,c:'#A39D95',l:'Skipped'},{v:m.ns,c:'#E2DED6',l:'Not Started'}];
+  const svg=document.getElementById('donut');svg.innerHTML='';let ang=-Math.PI/2;const cx=55,cy=55,r=42,ir=26;
+  segs.forEach(seg=>{if(!seg.v)return;const a=(seg.v/45)*Math.PI*2,x1=cx+r*Math.cos(ang),y1=cy+r*Math.sin(ang),x2=cx+r*Math.cos(ang+a),y2=cy+r*Math.sin(ang+a);const ix1=cx+ir*Math.cos(ang+a),iy1=cy+ir*Math.sin(ang+a),ix2=cx+ir*Math.cos(ang),iy2=cy+ir*Math.sin(ang);const lg=a>Math.PI?1:0;const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',`M${x1},${y1} A${r},${r} 0 ${lg},1 ${x2},${y2} L${ix1},${iy1} A${ir},${ir} 0 ${lg},0 ${ix2},${iy2} Z`);path.setAttribute('fill',seg.c);svg.appendChild(path);ang+=a;});
+  [['14','700','Playfair Display,serif',m.cmp,cy-3],['9','400','DM Sans,sans-serif','done',cy+11]].forEach(([fs,fw,ff,txt,y])=>{const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',cx);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');t.setAttribute('font-size',fs);t.setAttribute('font-weight',fw);t.setAttribute('font-family',ff);t.setAttribute('fill',y<cy?'#1C1A17':'#A39D95');t.textContent=txt;svg.appendChild(t);});
+  document.getElementById('donut-leg').innerHTML=segs.map(s=>`<div class="legend-item"><div class="legend-dot" style="background:${s.c}"></div><span class="legend-label">${s.l}</span><span class="legend-count">${s.v}</span></div>`).join('');
+  const phHrs=['P1','P2','P3','P4'].map(ph=>DAYS.filter(d=>d.ph===ph).reduce((s,d)=>s+(parseFloat(S.days[d.d]?.hours)||0),0));const maxH=Math.max(...phHrs,1);
+  document.getElementById('hrs-list').innerHTML=['Phase 1','Phase 2','Phase 3','Phase 4'].map((l,i)=>`<div class="hours-row"><div class="hours-label">${l}</div><div class="hours-bar-track"><div class="hours-bar-fill" style="width:${Math.round(phHrs[i]/maxH*100)}%;background:${['#4A3FA0','#1A7A60','#B5600A','#2B5DA8'][i]}"></div></div><div class="hours-val">${phHrs[i].toFixed(1)}h</div></div>`).join('');
+  const ms=[{p:25,l:"25% Complete",i:"◈"},{p:50,l:"Halfway There!",i:"◑"},{p:75,l:"75% Done",i:"◕"},{p:100,l:"Roadmap Complete!",i:"◉"}];
+  document.getElementById('ms-list').innerHTML=ms.map(ms=>{const ok=m.pct>=ms.p;return `<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:${ok?'var(--green-bg)':'var(--surface2)'};border:1px solid ${ok?'#B8DFCA':'var(--border)'}"><span style="font-size:16px;color:${ok?'var(--green)':'var(--text-muted)'}">${ms.i}</span><div style="flex:1"><div style="font-size:12px;font-weight:600;color:${ok?'var(--green)':'var(--text-primary)'}">${ms.l}</div><div style="font-size:10px;color:var(--text-muted)">At ${ms.p}% completion</div></div>${ok?`<span style="font-size:11px;font-weight:600;color:var(--green)">✓ Achieved</span>`:`<span style="font-size:11px;color:var(--text-muted)">${ms.p-m.pct}% to go</span>`}</div>`;}).join('');
+}
+
+// ── Auto-login if session exists ──
+(function(){
+  const email=getSession();
+  if(email){
+    const users=getUsers();const user=users[email];
+    if(user){launchApp(user);return;}
+    clearSession();
+  }
+  document.getElementById('auth-overlay').style.display='flex';
+  // Enter key support
+  document.getElementById('login-pwd').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('sig-pwd2').addEventListener('keydown',e=>{if(e.key==='Enter')doSignup();});
+})();
+</script>
+</body>
+</html>
