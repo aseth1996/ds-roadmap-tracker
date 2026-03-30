@@ -651,18 +651,19 @@ async function doSignup(){
 async function doLogin(){
   const email=document.getElementById('login-email').value.trim().toLowerCase();
   const pwd=document.getElementById('login-pwd').value;
+
   hideAlert('login-error');
 
   if(!email) return showAlert('login-error','Please enter your email.','alert-error');
   if(!pwd) return showAlert('login-error','Please enter your password.','alert-error');
 
-  const { data, error } = window.supabaseClient.auth.signInWithPassword({
+  const { data, error } = await window.supabaseClient.auth.signInWithPassword({
     email,
     password: pwd
   });
 
-  if(error){
-    return showAlert('login-error', error.message, 'alert-error');
+  if(error || !data || !data.user){
+    return showAlert('login-error', error?.message || 'Login failed', 'alert-error');
   }
 
   const { data: profile, error: profileError } = await window.supabaseClient
